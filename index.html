@@ -1,0 +1,2811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CryptoShield | Blockchain Intelligence</title>
+
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: #060a12;
+            color: #e5e7eb;
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        /* =====================================================
+           APP
+        ===================================================== */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #080d18;
+            border-right: 1px solid rgba(148, 163, 184, 0.12);
+            padding: 28px 18px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: 800;
+            color: #f8fafc;
+            letter-spacing: -0.03em;
+        }
+
+        .brand-blue {
+            color: #60a5fa;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .side-section {
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+            margin-top: 30px;
+            margin-bottom: 9px;
+        }
+
+        .side-item {
+            color: #94a3b8;
+            padding: 11px 12px;
+            border-radius: 9px;
+            font-size: 14px;
+            margin-bottom: 3px;
+            cursor: pointer;
+        }
+
+        .side-item:hover {
+            background: rgba(59, 130, 246, 0.10);
+            color: #dbeafe;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow:
+                0 0 12px
+                rgba(34, 197, 94, 0.75);
+        }
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 32px;
+        }
+
+        .container {
+            max-width: 1450px;
+            margin: auto;
+        }
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            padding: 43px 45px;
+            border-radius: 22px;
+            border: 1px solid rgba(148, 163, 184, 0.13);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(15, 23, 42, 0.92),
+                    rgba(15, 23, 42, 0.60)
+                );
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.35);
+
+            margin-bottom: 24px;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            right: -100px;
+            top: -120px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(37, 99, 235, 0.25),
+                    transparent 65%
+                );
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 6px 13px;
+            border-radius: 999px;
+
+            background:
+                rgba(37, 99, 235, 0.13);
+
+            border:
+                1px solid
+                rgba(96, 165, 250, 0.22);
+
+            color: #93c5fd;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+        }
+
+        .hero-title {
+            font-size: 44px;
+            line-height: 1.08;
+            margin-top: 18px;
+            margin-bottom: 13px;
+
+            color: #f8fafc;
+            letter-spacing: -0.045em;
+            font-weight: 850;
+        }
+
+        .hero-text {
+            color: #94a3b8;
+            font-size: 16px;
+            max-width: 800px;
+            line-height: 1.75;
+        }
+
+        /* =====================================================
+           PANEL
+        ===================================================== */
+
+        .panel {
+            padding: 23px;
+            border-radius: 18px;
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.13);
+
+            background:
+                rgba(15, 23, 42, 0.65);
+
+            margin-bottom: 16px;
+        }
+
+        .panel-title {
+            color: #f8fafc;
+            font-size: 17px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .panel-description {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* =====================================================
+           INPUT
+        ===================================================== */
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 18px;
+        }
+
+        label {
+            display: block;
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px;
+
+            background: #0b1220;
+            color: #e5e7eb;
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.16);
+
+            border-radius: 12px;
+            outline: none;
+
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #3b82f6;
+
+            box-shadow:
+                0 0 0 1px
+                #3b82f6;
+        }
+
+        .button-row {
+            margin-top: 18px;
+        }
+
+        .primary-button {
+            width: 100%;
+            min-height: 48px;
+
+            border-radius: 12px;
+            border:
+                1px solid
+                rgba(96, 165, 250, 0.28);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #4f46e5
+                );
+
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+
+            cursor: pointer;
+
+            transition:
+                all 0.2s ease;
+        }
+
+        .primary-button:hover {
+            border-color:
+                rgba(147, 197, 253, 0.60);
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(37, 99, 235, 0.20);
+        }
+
+        /* =====================================================
+           RESULTS
+        ===================================================== */
+
+        #results {
+            display: none;
+        }
+
+        .section-title {
+            color: #f8fafc;
+            font-size: 22px;
+            font-weight: 800;
+            margin: 28px 0 14px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 14px;
+        }
+
+        .metric-card {
+            padding: 20px;
+            min-height: 105px;
+
+            border-radius: 16px;
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.12);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(15, 23, 42, 0.80),
+                    rgba(15, 23, 42, 0.50)
+                );
+        }
+
+        .metric-label {
+            color: #64748b;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+
+        .metric-value {
+            color: #f8fafc;
+            font-size: 25px;
+            font-weight: 850;
+            margin-top: 6px;
+        }
+
+        /* =====================================================
+           RISK
+        ===================================================== */
+
+        .risk-box {
+            margin-top: 24px;
+            padding: 24px;
+
+            border-radius: 18px;
+
+            border:
+                1px solid
+                rgba(239, 68, 68, 0.20);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(127, 29, 29, 0.18),
+                    rgba(15, 23, 42, 0.75)
+                );
+
+            box-shadow:
+                0 18px 50px
+                rgba(0, 0, 0, 0.25);
+        }
+
+        .risk-content {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+            flex-wrap: wrap;
+        }
+
+        .risk-score {
+            color: #f87171;
+            font-size: 35px;
+            font-weight: 900;
+        }
+
+        .risk-level {
+            color: #fca5a5;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+        }
+
+        .indicator-title {
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .indicator {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin: 6px 0;
+        }
+
+        /* =====================================================
+           INTELLIGENCE
+        ===================================================== */
+
+        .info-box {
+            padding: 18px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(37, 99, 235, 0.08);
+
+            border:
+                1px solid
+                rgba(96, 165, 250, 0.15);
+
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .patterns {
+            display: grid;
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 10px;
+        }
+
+        .pattern {
+            padding: 14px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(15, 23, 42, 0.7);
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.12);
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+        }
+
+        .pattern span {
+            float: right;
+            color: #60a5fa;
+            font-weight: 800;
+        }
+
+        /* =====================================================
+           FINDINGS
+        ===================================================== */
+
+        .finding {
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.12);
+
+            border-radius: 14px;
+
+            background:
+                rgba(15, 23, 42, 0.65);
+
+            margin-bottom: 10px;
+
+            overflow: hidden;
+        }
+
+        .finding-header {
+            padding: 16px;
+
+            cursor: pointer;
+
+            color: #e2e8f0;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .finding-content {
+            display: none;
+            padding: 0 16px 18px;
+
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .finding.open .finding-content {
+            display: block;
+        }
+
+        .code {
+            color: #93c5fd;
+            font-family: monospace;
+        }
+
+        /* =====================================================
+           GRAPH
+        ===================================================== */
+
+        .graph-wrapper {
+            position: relative;
+
+            width: 100%;
+            height: 650px;
+
+            overflow: hidden;
+
+            border-radius: 22px;
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.16);
+
+            background:
+                radial-gradient(
+                    circle at 50% 45%,
+                    rgba(37, 99, 235, 0.14),
+                    transparent 34%
+                ),
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(124, 58, 237, 0.10),
+                    transparent 28%
+                ),
+                #050914;
+
+            box-shadow:
+                inset 0 0 100px
+                rgba(37, 99, 235, 0.035),
+
+                0 25px 80px
+                rgba(0, 0, 0, 0.40);
+        }
+
+        #graph {
+            width: 100%;
+            height: 100%;
+        }
+
+        .grid {
+            position: absolute;
+            inset: 0;
+
+            pointer-events: none;
+
+            opacity: 0.16;
+
+            background-image:
+                linear-gradient(
+                    rgba(96, 165, 250, 0.07) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(96, 165, 250, 0.07) 1px,
+                    transparent 1px
+                );
+
+            background-size: 42px 42px;
+        }
+
+        .graph-title {
+            position: absolute;
+            top: 16px;
+            left: 18px;
+
+            z-index: 10;
+
+            padding: 11px 15px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(8, 13, 24, 0.86);
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.14);
+
+            color: #e2e8f0;
+
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .graph-subtitle {
+            margin-top: 3px;
+
+            color: #64748b;
+
+            font-size: 9px;
+            font-weight: 700;
+
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .legend {
+            position: absolute;
+
+            top: 16px;
+            right: 18px;
+
+            z-index: 10;
+
+            display: flex;
+            gap: 12px;
+
+            padding: 10px 13px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(8, 13, 24, 0.86);
+
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.14);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            color: #94a3b8;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-suspect {
+            background: #ef4444;
+
+            box-shadow:
+                0 0 13px
+                rgba(239, 68, 68, 0.9);
+        }
+
+        .dot-wallet {
+            background: #3b82f6;
+
+            box-shadow:
+                0 0 12px
+                rgba(59, 130, 246, 0.8);
+        }
+
+        .controls {
+            position: absolute;
+
+            left: 18px;
+            bottom: 18px;
+
+            display: flex;
+            gap: 7px;
+
+            z-index: 10;
+        }
+
+        .control {
+            border:
+                1px solid
+                rgba(148, 163, 184, 0.16);
+
+            background:
+                rgba(8, 13, 24, 0.90);
+
+            color: #cbd5e1;
+
+            border-radius: 10px;
+
+            padding: 8px 11px;
+
+            cursor: pointer;
+
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .control:hover {
+            background:
+                rgba(37, 99, 235, 0.30);
+
+            color: white;
+        }
+
+        .wallet-badge {
+            position: absolute;
+
+            right: 18px;
+            bottom: 18px;
+
+            z-index: 10;
+
+            max-width: 280px;
+
+            padding: 10px 13px;
+
+            border-radius: 11px;
+
+            background:
+                rgba(8, 13, 24, 0.90);
+
+            border:
+                1px solid
+                rgba(239, 68, 68, 0.22);
+
+            color: #94a3b8;
+
+            font-size: 10px;
+        }
+
+        .wallet-badge strong {
+            display: block;
+
+            color: #f87171;
+
+            font-size: 9px;
+
+            letter-spacing: 0.09em;
+
+            text-transform: uppercase;
+
+            margin-bottom: 3px;
+        }
+
+        /* =====================================================
+           OVERVIEW
+        ===================================================== */
+
+        .overview {
+            margin-top: 30px;
+        }
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        .loading {
+            display: none;
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #60a5fa;
+        }
+
+        .spinner {
+            display: inline-block;
+
+            width: 22px;
+            height: 22px;
+
+            border:
+                3px solid
+                rgba(96, 165, 250, 0.2);
+
+            border-top-color: #60a5fa;
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.8s linear infinite;
+
+            vertical-align: middle;
+
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+            text-align: center;
+
+            color: #475569;
+
+            font-size: 11px;
+
+            margin-top: 40px;
+            padding-bottom: 25px;
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 18px;
+            }
+
+            .hero-title {
+                font-size: 34px;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .patterns {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            🛡️ Crypto<span class="brand-blue">Shield</span>
+        </div>
+
+        <div class="subtitle">
+            Blockchain Intelligence Platform
+        </div>
+
+        <div class="side-section">
+            Investigation
+        </div>
+
+        <div class="side-item">
+            ◉ New Investigation
+        </div>
+
+        <div class="side-item">
+            ⌕ Investigation History
+        </div>
+
+        <div class="side-item">
+            ◈ Intelligence
+        </div>
+
+        <div class="side-section">
+            System
+        </div>
+
+        <div class="side-item">
+            ⚙ Configuration
+        </div>
+
+        <div class="side-item">
+            ◌ System Status
+        </div>
+
+        <hr style="
+            border:0;
+            border-top:1px solid rgba(148,163,184,0.12);
+            margin-top:25px;
+        ">
+
+        <div class="status">
+            <div class="status-dot"></div>
+            <span>Core systems online</span>
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+        <div class="container">
+
+            <!-- HERO -->
+
+            <section class="hero">
+
+                <div class="hero-label">
+                    SIH 26183 · INVESTIGATION CONSOLE
+                </div>
+
+                <div class="hero-title">
+                    Real-Time Crypto Fraud Intelligence
+                </div>
+
+                <div class="hero-text">
+                    Transform a victim-reported cryptocurrency
+                    wallet address into an evidence-driven
+                    blockchain investigation. Trace transaction
+                    flows, identify suspicious patterns, and build
+                    actionable intelligence for investigators.
+                </div>
+
+            </section>
+
+
+            <!-- INVESTIGATION -->
+
+            <section class="panel">
+
+                <div class="panel-title">
+                    🔎 Start New Investigation
+                </div>
+
+                <div class="panel-description">
+                    Enter the suspect wallet reported by the victim.
+                    Blockchain analysis will begin after submission.
+                </div>
+
+                <div class="input-grid">
+
+                    <div>
+
+                        <label>
+                            Suspect wallet address
+                        </label>
+
+                        <input
+                            id="wallet"
+                            type="text"
+                            placeholder="Enter Ethereum wallet address..."
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label>
+                            Blockchain
+                        </label>
+
+                        <select id="blockchain">
+
+                            <option>Ethereum</option>
+                            <option>BNB Chain</option>
+                            <option>Polygon</option>
+                            <option>Arbitrum</option>
+                            <option>Base</option>
+                            <option>Optimism</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="button-row">
+
+                    <button
+                        class="primary-button"
+                        onclick="startInvestigation()"
+                    >
+                        🚀 Start Investigation
+                    </button>
+
+                </div>
+
+                <div
+                    id="loading"
+                    class="loading"
+                >
+                    <span class="spinner"></span>
+                    Analyzing blockchain transactions...
+                </div>
+
+            </section>
+
+
+            <!-- RESULTS -->
+
+            <section id="results">
+
+                <div class="section-title">
+                    🔎 Investigation Results
+                </div>
+
+                <div class="metrics">
+
+                    <div class="metric-card">
+                        <div class="metric-label">
+                            Transactions
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="totalTransactions"
+                        >
+                            0
+                        </div>
+                    </div>
+
+
+                    <div class="metric-card">
+                        <div class="metric-label">
+                            Incoming
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="incomingTransactions"
+                        >
+                            0
+                        </div>
+                    </div>
+
+
+                    <div class="metric-card">
+                        <div class="metric-label">
+                            Outgoing
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="outgoingTransactions"
+                        >
+                            0
+                        </div>
+                    </div>
+
+
+                    <div class="metric-card">
+                        <div class="metric-label">
+                            Counterparties
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="counterparties"
+                        >
+                            0
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- RISK -->
+
+                <div class="risk-box">
+
+                    <div
+                        style="
+                            color:#f8fafc;
+                            font-size:17px;
+                            font-weight:800;
+                            margin-bottom:16px;
+                        "
+                    >
+                        🛡️ Risk Intelligence
+                    </div>
+
+                    <div class="risk-content">
+
+                        <div>
+
+                            <div
+                                class="risk-score"
+                                id="riskScore"
+                            >
+                                0/100
+                            </div>
+
+                            <div
+                                class="risk-level"
+                                id="riskLevel"
+                            >
+                                LOW
+                            </div>
+
+                        </div>
+
+                        <div style="
+                            flex:1;
+                            min-width:250px;
+                        ">
+
+                            <div class="indicator-title">
+                                DETECTED INDICATORS
+                            </div>
+
+                            <div
+                                id="riskIndicators"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TRANSACTION INTELLIGENCE -->
+
+                <div class="section-title">
+                    🧠 Transaction Intelligence
+                </div>
+
+                <div class="info-box">
+
+                    Automated analysis of transaction behavior
+                    and recurring patterns.
+
+                </div>
+
+                <div
+                    class="metrics"
+                    style="margin-top:14px;"
+                >
+
+                    <div class="metric-card">
+
+                        <div class="metric-label">
+                            Transactions Analyzed
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="analyzed"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+                    <div class="metric-card">
+
+                        <div class="metric-label">
+                            Flagged Transactions
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="flagged"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+                    <div class="metric-card">
+
+                        <div class="metric-label">
+                            Unique Counterparties
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="uniqueCounterparties"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+                    <div class="metric-card">
+
+                        <div class="metric-label">
+                            Blockchain
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="selectedChain"
+                            style="font-size:17px;"
+                        >
+                            Ethereum
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="info-box"
+                    style="margin-top:14px;"
+                    id="summary"
+                >
+                </div>
+
+
+                <!-- PATTERNS -->
+
+                <div class="section-title">
+                    🔍 Detected Patterns
+                </div>
+
+                <div
+                    class="patterns"
+                    id="patterns"
+                >
+                </div>
+
+
+                <!-- FINDINGS -->
+
+                <div class="section-title">
+                    🚨 Transaction Findings
+                </div>
+
+                <div id="findings">
+                </div>
+
+
+                <!-- GRAPH -->
+
+                <div class="section-title">
+                    🕸️ Fund Flow Intelligence
+                </div>
+
+                <div class="graph-wrapper">
+
+                    <div class="grid"></div>
+
+                    <div class="graph-title">
+
+                        🕸️ FUND FLOW INTELLIGENCE
+
+                        <div class="graph-subtitle">
+                            Interactive transaction topology
+                        </div>
+
+                    </div>
+
+                    <div class="legend">
+
+                        <div class="legend-item">
+                            <span
+                                class="dot dot-suspect"
+                            ></span>
+                            Suspect
+                        </div>
+
+                        <div class="legend-item">
+                            <span
+                                class="dot dot-wallet"
+                            ></span>
+                            Wallet
+                        </div>
+
+                    </div>
+
+                    <div id="graph"></div>
+
+                    <div class="controls">
+
+                        <button
+                            class="control"
+                            onclick="network.fit({animation:true})"
+                        >
+                            ⛶ FIT
+                        </button>
+
+                        <button
+                            class="control"
+                            onclick="focusSuspect()"
+                        >
+                            ◎ SUSPECT
+                        </button>
+
+                        <button
+                            class="control"
+                            onclick="zoomOut()"
+                        >
+                            − ZOOM
+                        </button>
+
+                        <button
+                            class="control"
+                            onclick="zoomIn()"
+                        >
+                            + ZOOM
+                        </button>
+
+                    </div>
+
+                    <div class="wallet-badge">
+
+                        <strong>
+                            Target Wallet
+                        </strong>
+
+                        <span id="targetWallet">
+                            —
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OVERVIEW -->
+
+                <div class="section-title">
+                    Investigation Overview
+                </div>
+
+                <div class="metrics">
+
+                    <div class="metric-card">
+
+                        <div class="metric-label">
+                            Active Cases
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="activeCases"
+                        >
+                            1
+                        </div>
+
+                    </div>
+
+
+                    <div class="metric-card">
+
+                        <div class="metric-label">
+                            Wallets Analyzed
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="walletsAnalyzed"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="metric-card">
+
+                        <div class="metric-label">
+                            High-Risk Findings
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="highRiskFindings"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="metric-card">
+
+                        <div class="metric-label">
+                            VASP Matches
+                        </div>
+
+                        <div
+                            class="metric-value"
+                            id="vaspMatches"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <div class="footer">
+
+                CryptoShield · Blockchain Intelligence Prototype
+                · SIH 26183
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   DEMO TRANSACTION DATA
+   =========================================================
+
+   IMPORTANT:
+   GitHub Pages cannot execute your Python investigation.py.
+
+   These transactions are therefore DEMO DATA for the
+   static GitHub Pages frontend.
+
+   Your real Python backend can later be connected through
+   an API.
+========================================================= */
+
+let transactions = [];
+
+let targetWallet = "";
+
+let network;
+
+
+/* =========================================================
+   START INVESTIGATION
+========================================================= */
+
+function startInvestigation() {
+
+    const walletInput =
+        document.getElementById("wallet");
+
+    const blockchain =
+        document.getElementById("blockchain").value;
+
+    const wallet =
+        walletInput.value.trim();
+
+    if (!wallet) {
+
+        alert(
+            "Please enter a wallet address to begin the investigation."
+        );
+
+        walletInput.focus();
+
+        return;
+    }
+
+
+    document.getElementById("loading").style.display =
+        "block";
+
+    document.getElementById("results").style.display =
+        "none";
+
+
+    /*
+        Simulate investigation delay.
+    */
+
+    setTimeout(function() {
+
+        targetWallet = wallet;
+
+        transactions =
+            generateDemoTransactions(wallet);
+
+
+        renderResults(
+            blockchain
+        );
+
+
+        document.getElementById("loading").style.display =
+            "none";
+
+        document.getElementById("results").style.display =
+            "block";
+
+
+        setTimeout(function() {
+
+            window.scrollTo({
+                top:
+                    document.getElementById("results")
+                        .offsetTop - 20,
+
+                behavior: "smooth"
+            });
+
+        }, 100);
+
+    }, 900);
+
+}
+
+
+/* =========================================================
+   DEMO DATA GENERATOR
+========================================================= */
+
+function generateDemoTransactions(wallet) {
+
+    const address1 =
+        "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+
+    const address2 =
+        "0x742d35Cc6634C0532925a3b844Bc454e4438f44e";
+
+    const address3 =
+        "0x8ba1f109551bD432803012645Ac136ddd64DBA72";
+
+    const address4 =
+        "0x9fB8cA2e6D7f11223344556677889900AaBbCcDd";
+
+    return [
+
+        {
+            hash:
+                "0xabc123456789abcdef001",
+
+            from:
+                wallet,
+
+            to:
+                address1,
+
+            value:
+                2.75
+        },
+
+        {
+            hash:
+                "0xabc123456789abcdef002",
+
+            from:
+                address1,
+
+            to:
+                address2,
+
+            value:
+                2.40
+        },
+
+        {
+            hash:
+                "0xabc123456789abcdef003",
+
+            from:
+                wallet,
+
+            to:
+                address3,
+
+            value:
+                0.82
+        },
+
+        {
+            hash:
+                "0xabc123456789abcdef004",
+
+            from:
+                address3,
+
+            to:
+                address2,
+
+            value:
+                0.75
+        },
+
+        {
+            hash:
+                "0xabc123456789abcdef005",
+
+            from:
+                address2,
+
+            to:
+                address4,
+
+            value:
+                2.10
+        },
+
+        {
+            hash:
+                "0xabc123456789abcdef006",
+
+            from:
+                address4,
+
+            to:
+                wallet,
+
+            value:
+                0.35
+        }
+
+    ];
+
+}
+
+
+/* =========================================================
+   ANALYZE TRANSACTIONS
+========================================================= */
+
+function analyzeTransactions() {
+
+    const incoming =
+        transactions.filter(
+            tx =>
+                tx.to.toLowerCase() ===
+                targetWallet.toLowerCase()
+        ).length;
+
+
+    const outgoing =
+        transactions.filter(
+            tx =>
+                tx.from.toLowerCase() ===
+                targetWallet.toLowerCase()
+        ).length;
+
+
+    const counterparties =
+        new Set();
+
+
+    transactions.forEach(function(tx) {
+
+        if (
+            tx.from.toLowerCase() ===
+            targetWallet.toLowerCase()
+        ) {
+
+            counterparties.add(
+                tx.to.toLowerCase()
+            );
+
+        }
+
+        if (
+            tx.to.toLowerCase() ===
+            targetWallet.toLowerCase()
+        ) {
+
+            counterparties.add(
+                tx.from.toLowerCase()
+            );
+
+        }
+
+    });
+
+
+    const largeTransfers =
+        transactions.filter(
+            tx => tx.value > 1
+        ).length;
+
+
+    return {
+
+        total:
+            transactions.length,
+
+        incoming,
+
+        outgoing,
+
+        counterparties:
+            counterparties.size,
+
+        largeTransfers
+
+    };
+
+}
+
+
+/* =========================================================
+   RISK
+========================================================= */
+
+function calculateRisk(data) {
+
+    let score = 0;
+
+    const reasons = [];
+
+
+    if (data.largeTransfers > 0) {
+
+        score += 25;
+
+        reasons.push(
+            "Large-value transfers detected."
+        );
+
+    }
+
+
+    if (data.counterparties >= 3) {
+
+        score += 20;
+
+        reasons.push(
+            "Multiple counterparties detected."
+        );
+
+    }
+
+
+    if (
+        data.incoming > 0 &&
+        data.outgoing > 0
+    ) {
+
+        score += 25;
+
+        reasons.push(
+            "Incoming and outgoing fund flow detected."
+        );
+
+    }
+
+
+    if (transactions.length >= 5) {
+
+        score += 15;
+
+        reasons.push(
+            "Repeated transaction activity detected."
+        );
+
+    }
+
+
+    score =
+        Math.min(score, 100);
+
+
+    let level =
+        "LOW";
+
+
+    if (score >= 70) {
+
+        level =
+            "HIGH";
+
+    }
+    else if (score >= 40) {
+
+        level =
+            "MEDIUM";
+
+    }
+
+
+    if (reasons.length === 0) {
+
+        reasons.push(
+            "No major indicators detected."
+        );
+
+    }
+
+
+    return {
+        score,
+        level,
+        reasons
+    };
+
+}
+
+
+/* =========================================================
+   RENDER RESULTS
+========================================================= */
+
+function renderResults(blockchain) {
+
+    const data =
+        analyzeTransactions();
+
+    const risk =
+        calculateRisk(data);
+
+
+    document.getElementById(
+        "totalTransactions"
+    ).textContent =
+        data.total;
+
+
+    document.getElementById(
+        "incomingTransactions"
+    ).textContent =
+        data.incoming;
+
+
+    document.getElementById(
+        "outgoingTransactions"
+    ).textContent =
+        data.outgoing;
+
+
+    document.getElementById(
+        "counterparties"
+    ).textContent =
+        data.counterparties;
+
+
+    document.getElementById(
+        "analyzed"
+    ).textContent =
+        data.total;
+
+
+    document.getElementById(
+        "flagged"
+    ).textContent =
+        Math.min(
+            data.largeTransfers + 2,
+            data.total
+        );
+
+
+    document.getElementById(
+        "uniqueCounterparties"
+    ).textContent =
+        data.counterparties;
+
+
+    document.getElementById(
+        "selectedChain"
+    ).textContent =
+        blockchain;
+
+
+    document.getElementById(
+        "riskScore"
+    ).textContent =
+        risk.score + "/100";
+
+
+    document.getElementById(
+        "riskLevel"
+    ).textContent =
+        risk.level;
+
+
+    document.getElementById(
+        "targetWallet"
+    ).textContent =
+        shortenAddress(targetWallet);
+
+
+    document.getElementById(
+        "summary"
+    ).textContent =
+        "Transaction intelligence identified "
+        + data.total
+        + " transactions involving "
+        + data.counterparties
+        + " unique counterparties. "
+        + "The displayed analysis is generated by the frontend demo engine.";
+
+
+    renderRiskReasons(
+        risk.reasons
+    );
+
+
+    renderPatterns(
+        data
+    );
+
+
+    renderFindings();
+
+
+    buildGraph();
+
+}
+
+
+/* =========================================================
+   RISK REASONS
+========================================================= */
+
+function renderRiskReasons(reasons) {
+
+    const container =
+        document.getElementById(
+            "riskIndicators"
+        );
+
+
+    container.innerHTML = "";
+
+
+    reasons.forEach(function(reason) {
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "indicator";
+
+        div.textContent =
+            "⚠ " + reason;
+
+        container.appendChild(
+            div
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   PATTERNS
+========================================================= */
+
+function renderPatterns(data) {
+
+    const container =
+        document.getElementById(
+            "patterns"
+        );
+
+
+    container.innerHTML = "";
+
+
+    const patterns = [
+
+        [
+            "💰 Large Value Transfers",
+            data.largeTransfers
+        ],
+
+        [
+            "⚡ Rapid Fund Movement",
+            1
+        ],
+
+        [
+            "👥 Multiple Counterparties",
+            data.counterparties
+        ],
+
+        [
+            "🔁 Repeated Counterparty",
+            1
+        ],
+
+        [
+            "🔄 Incoming → Outgoing Flow",
+            data.incoming > 0 &&
+            data.outgoing > 0
+                ? 1
+                : 0
+        ],
+
+        [
+            "📈 Unusual Value Pattern",
+            data.largeTransfers
+        ]
+
+    ];
+
+
+    patterns.forEach(function(item) {
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "pattern";
+
+        div.innerHTML =
+            item[0]
+            + "<span>"
+            + item[1]
+            + "</span>";
+
+        container.appendChild(
+            div
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   FINDINGS
+========================================================= */
+
+function renderFindings() {
+
+    const container =
+        document.getElementById(
+            "findings"
+        );
+
+
+    container.innerHTML = "";
+
+
+    transactions.forEach(
+        function(tx, index) {
+
+            if (tx.value <= 1) {
+
+                return;
+
+            }
+
+
+            const finding =
+                document.createElement("div");
+
+            finding.className =
+                "finding";
+
+
+            const header =
+                document.createElement("div");
+
+            header.className =
+                "finding-header";
+
+            header.textContent =
+                "Transaction #"
+                + (index + 1)
+                + " — 💰 Large Value Transfer";
+
+
+            const content =
+                document.createElement("div");
+
+            content.className =
+                "finding-content";
+
+
+            content.innerHTML =
+
+                "<strong>Transaction Hash:</strong> "
+                + "<span class='code'>"
+                + escapeHtml(tx.hash)
+                + "</span><br><br>"
+
+                + "<strong>From:</strong> "
+                + "<span class='code'>"
+                + escapeHtml(tx.from)
+                + "</span><br>"
+
+                + "<strong>To:</strong> "
+                + "<span class='code'>"
+                + escapeHtml(tx.to)
+                + "</span><br>"
+
+                + "<strong>Value:</strong> "
+                + tx.value
+                + " ETH<br><br>"
+
+                + "<strong>Why it was flagged:</strong><br>"
+                + "• Transfer exceeds the demo large-value threshold.<br>"
+                + "• Transaction contributes to the detected fund-flow pattern.";
+
+
+            header.onclick =
+                function() {
+
+                    finding.classList.toggle(
+                        "open"
+                    );
+
+                };
+
+
+            finding.appendChild(
+                header
+            );
+
+            finding.appendChild(
+                content
+            );
+
+            container.appendChild(
+                finding
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GRAPH
+========================================================= */
+
+function buildGraph() {
+
+    const nodeMap =
+        new Map();
+
+    const edges =
+        [];
+
+
+    nodeMap.set(
+        targetWallet.toLowerCase(),
+        {
+            id:
+                targetWallet,
+
+            label:
+                "SUSPECT WALLET",
+
+            title:
+                "<b>Suspect Wallet</b><br>"
+                + escapeHtml(targetWallet),
+
+            group:
+                "suspect"
+        }
+    );
+
+
+    transactions.forEach(
+        function(tx, index) {
+
+            if (!nodeMap.has(
+                tx.from.toLowerCase()
+            )) {
+
+                nodeMap.set(
+                    tx.from.toLowerCase(),
+                    {
+                        id:
+                            tx.from,
+
+                        label:
+                            shortenAddress(
+                                tx.from
+                            ),
+
+                        title:
+                            "<b>Wallet</b><br>"
+                            + escapeHtml(
+                                tx.from
+                            ),
+
+                        group:
+                            "wallet"
+                    }
+                );
+
+            }
+
+
+            if (!nodeMap.has(
+                tx.to.toLowerCase()
+            )) {
+
+                nodeMap.set(
+                    tx.to.toLowerCase(),
+                    {
+                        id:
+                            tx.to,
+
+                        label:
+                            shortenAddress(
+                                tx.to
+                            ),
+
+                        title:
+                            "<b>Wallet</b><br>"
+                            + escapeHtml(
+                                tx.to
+                            ),
+
+                        group:
+                            "wallet"
+                    }
+                );
+
+            }
+
+
+            edges.push({
+
+                id:
+                    "edge-" + index,
+
+                from:
+                    tx.from,
+
+                to:
+                    tx.to,
+
+                arrows:
+                    "to",
+
+                label:
+                    Number(tx.value)
+                        .toFixed(4),
+
+                title:
+                    "<b>Transaction</b><br>"
+                    + "Amount: "
+                    + tx.value
+                    + " ETH<br>"
+                    + "Hash: "
+                    + escapeHtml(
+                        tx.hash
+                    )
+
+            });
+
+        }
+    );
+
+
+    const nodes =
+        new vis.DataSet(
+            Array.from(
+                nodeMap.values()
+            )
+        );
+
+
+    const edgeData =
+        new vis.DataSet(
+            edges
+        );
+
+
+    const container =
+        document.getElementById(
+            "graph"
+        );
+
+
+    const data = {
+
+        nodes:
+            nodes,
+
+        edges:
+            edgeData
+
+    };
+
+
+    const options = {
+
+        autoResize:
+            true,
+
+        interaction: {
+
+            hover:
+                true,
+
+            tooltipDelay:
+                120,
+
+            navigationButtons:
+                false,
+
+            keyboard:
+                true,
+
+            zoomView:
+                true,
+
+            dragView:
+                true,
+
+            dragNodes:
+                true
+
+        },
+
+        physics: {
+
+            enabled:
+                true,
+
+            solver:
+                "forceAtlas2Based",
+
+            forceAtlas2Based: {
+
+                gravitationalConstant:
+                    -125,
+
+                centralGravity:
+                    0.008,
+
+                springLength:
+                    185,
+
+                springConstant:
+                    0.035,
+
+                damping:
+                    0.82,
+
+                avoidOverlap:
+                    1.2
+
+            },
+
+            stabilization: {
+
+                enabled:
+                    true,
+
+                iterations:
+                    250,
+
+                updateInterval:
+                    25,
+
+                fit:
+                    true
+
+            }
+
+        },
+
+        nodes: {
+
+            shape:
+                "dot",
+
+            size:
+                15,
+
+            borderWidth:
+                2,
+
+            shadow: {
+
+                enabled:
+                    true,
+
+                color:
+                    "rgba(59,130,246,0.45)",
+
+                size:
+                    18,
+
+                x:
+                    0,
+
+                y:
+                    0
+
+            },
+
+            font: {
+
+                color:
+                    "#cbd5e1",
+
+                size:
+                    12,
+
+                face:
+                    "Inter, sans-serif",
+
+                strokeWidth:
+                    3,
+
+                strokeColor:
+                    "#050914"
+
+            }
+
+        },
+
+        groups: {
+
+            suspect: {
+
+                color: {
+
+                    background:
+                        "#ef4444",
+
+                    border:
+                        "#fecaca",
+
+                    highlight: {
+
+                        background:
+                            "#f87171",
+
+                        border:
+                            "#ffffff"
+
+                    }
+
+                },
+
+                size:
+                    29,
+
+                borderWidth:
+                    3,
+
+                shadow: {
+
+                    enabled:
+                        true,
+
+                    color:
+                        "rgba(239,68,68,0.85)",
+
+                    size:
+                        28,
+
+                    x:
+                        0,
+
+                    y:
+                        0
+
+                },
+
+                font: {
+
+                    color:
+                        "#fee2e2",
+
+                    size:
+                        13,
+
+                    bold:
+                        true,
+
+                    strokeWidth:
+                        4,
+
+                    strokeColor:
+                        "#050914"
+
+                }
+
+            },
+
+            wallet: {
+
+                color: {
+
+                    background:
+                        "#2563eb",
+
+                    border:
+                        "#60a5fa",
+
+                    highlight: {
+
+                        background:
+                            "#3b82f6",
+
+                        border:
+                            "#bfdbfe"
+
+                    }
+
+                }
+
+            }
+
+        },
+
+        edges: {
+
+            arrows: {
+
+                to: {
+
+                    enabled:
+                        true,
+
+                    scaleFactor:
+                        0.65
+
+                }
+
+            },
+
+            color: {
+
+                color:
+                    "rgba(96,165,250,0.32)",
+
+                highlight:
+                    "#60a5fa",
+
+                hover:
+                    "#93c5fd",
+
+                inherit:
+                    false
+
+            },
+
+            width:
+                1.5,
+
+            selectionWidth:
+                3,
+
+            smooth: {
+
+                enabled:
+                    true,
+
+                type:
+                    "dynamic",
+
+                roundness:
+                    0.25
+
+            },
+
+            font: {
+
+                color:
+                    "#64748b",
+
+                size:
+                    9,
+
+                strokeWidth:
+                    3,
+
+                strokeColor:
+                    "#050914",
+
+                align:
+                    "middle"
+
+            }
+
+        },
+
+        layout: {
+
+            improvedLayout:
+                true
+
+        }
+
+    };
+
+
+    network =
+        new vis.Network(
+            container,
+            data,
+            options
+        );
+
+
+    network.once(
+        "stabilizationIterationsDone",
+        function() {
+
+            network.fit({
+
+                animation: {
+
+                    duration:
+                        900,
+
+                    easingFunction:
+                        "easeInOutQuad"
+
+                }
+
+            });
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GRAPH CONTROLS
+========================================================= */
+
+function focusSuspect() {
+
+    if (!network) {
+        return;
+    }
+
+
+    network.focus(
+        targetWallet,
+        {
+
+            scale:
+                1.15,
+
+            animation: {
+
+                duration:
+                    800,
+
+                easingFunction:
+                    "easeInOutQuad"
+
+            }
+
+        }
+    );
+
+}
+
+
+function zoomIn() {
+
+    if (!network) {
+        return;
+    }
+
+
+    network.moveTo({
+
+        scale:
+            network.getScale() * 1.2,
+
+        animation:
+            true
+
+    });
+
+}
+
+
+function zoomOut() {
+
+    if (!network) {
+        return;
+    }
+
+
+    network.moveTo({
+
+        scale:
+            network.getScale() * 0.8,
+
+        animation:
+            true
+
+    });
+
+}
+
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+
+function shortenAddress(address) {
+
+    if (!address) {
+        return "";
+    }
+
+
+    if (address.length > 18) {
+
+        return (
+            address.substring(0, 10)
+            + "..."
+            + address.substring(
+                address.length - 8
+            )
+        );
+
+    }
+
+
+    return address;
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+</script>
+
+</body>
+</html>
